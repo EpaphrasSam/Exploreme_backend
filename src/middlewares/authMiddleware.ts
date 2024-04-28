@@ -27,11 +27,11 @@ export const TokenVerification = (
     req.body.userId = (decoded as JwtPayload).userId;
 
     // Check if the requested URL starts with /api/auth/
-    if (req.originalUrl.startsWith("/auth")) {
-      return res
-        .status(403)
-        .json({ message: "Access denied for authenticated users" });
-    }
+    // if (req.originalUrl.startsWith("/auth")) {
+    //   return res
+    //     .status(403)
+    //     .json({ message: "Access denied for authenticated users" });
+    // }
 
     // Proceed to the next middleware
     next();

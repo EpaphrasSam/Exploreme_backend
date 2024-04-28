@@ -11,40 +11,55 @@ const AuthService = {
 
     try {
       // Create a new user in the database
-      const newUser = await prisma.user.create({
-        data: {
-          username, // The username of the new user
-          email, // The email of the new user
-          password: hashedPassword, // The hashed password of the new user
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          OR: [{ username }, { email }],
         },
       });
+
+      if (existingUser) {
+        throw new Error("Username or email already exists");
+      }
+
+      const newUser = await prisma.user.create({
+        data: {
+          username,
+          email,
+          password: hashedPassword,
+        },
+      });
+
       return newUser;
     } catch (error) {
-      // If there is an error creating the user, log the error and throw an error
-      console.error(error);
-      throw new Error("Error creating user");
+      // If there is an error creating the user, throw the error
+      throw error;
     }
   },
 
   async signIn(username: string, password: string) {
-    // Find the user with the provided username
-    const user = await prisma.user.findUnique({ where: { username } });
+    try {
+      // Find the user with the provided username
+      const user = await prisma.user.findUnique({ where: { username } });
 
-    // Throw an error if the user does not exist
-    if (!user) {
-      throw new Error("Invalid credentials");
+      // Throw an error if the user does not exist
+      if (!user) {
+        throw new Error("Invalid credentials");
+      }
+
+      // Compare the provided password with the hashed password of the user
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      // Throw an error if the passwords do not match
+      if (!isMatch) {
+        throw new Error("Invalid credentials");
+      }
+
+      // Return the user token if the sign in is successful
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-
-    // Compare the provided password with the hashed password of the user
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    // Throw an error if the passwords do not match
-    if (!isMatch) {
-      throw new Error("Invalid credentials");
-    }
-
-    // Return the user token if the sign in is successful
-    return user;
   },
 };
 

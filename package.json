@@ -4,8 +4,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "start": "npm install typescript --force && npx tsc && node dist/server.js",
-    "install": "npm install --force",
+    "start": "npx tsc && node dist/server.js",
     "build": "npx tsc"
   },
   "keywords": [],

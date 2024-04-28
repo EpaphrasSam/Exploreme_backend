@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.ts",
-    "start": "tsc && node dist/server.js",
+    "start": "npm install typescript --force && npx tsc && node dist/server.js",
     "install": "npm install --force",
-    "build": "tsc"
+    "build": "npx tsc"
   },
   "keywords": [],
   "author": "",

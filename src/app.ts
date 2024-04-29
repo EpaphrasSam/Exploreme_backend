@@ -14,7 +14,7 @@ app.post("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-// app.use(TokenVerification);
+app.use(TokenVerification);
 
 app.use("/auth", auth);
 
